@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Manrope:wght@600;700;800&display=swap");
+
+:root {
+  /* Palet Warna Utama GSM */
+  --color-primary: #153d32;
+  --color-primary-mid: #1f5445;
+  --color-primary-hover: #0e2b23;
+  --color-accent: #c5f36a;
+  --color-accent-hover: #b8ea52;
+
+  --bg-page: #f5f7f0;
+  --bg-card: #ffffff;
+  --bg-subtle: #eff3e8;
+  --bg-input: #f8faf4;
+
+  --text-heading: #153d32;
+  --text-body: #52645a;
+  --text-muted: #76887e;
+
+  --border-subtle: rgba(21, 61, 50, 0.08);
+  --border-input: rgba(21, 61, 50, 0.16);
+
+  /* Warna Badge Status (Syarat Fitur Modul) */
+  --green-bg: #ecfdf5;
+  --green-border: #a7f3d0;
+  --green-text: #047857;
+
+  --amber-bg: #fffbeb;
+  --amber-border: #fde68a;
+  --amber-text: #b45309;
+
+  --red-bg: #fff1f2;
+  --red-border: #fecdd3;
+  --red-text: #be123c;
+
+  /* Tipografi GSM */
+  --font-heading: "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Geometri, Bayangan & Transisi */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  --shadow-card: 0 4px 20px -2px rgba(21, 61, 50, 0.05),
+    0 1px 3px rgba(21, 61, 50, 0.03);
+  --shadow-hover: 0 14px 28px -6px rgba(21, 61, 50, 0.1),
+    0 4px 10px -2px rgba(21, 61, 50, 0.04);
+  --ring-focus: 0 0 0 3px rgba(197, 243, 106, 0.55);
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  background-image: radial-gradient(
+      circle at 92% 4%,
+      rgba(197, 243, 106, 0.22),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 6% 88%,
+      rgba(21, 61, 50, 0.04),
+      transparent 42%
+    );
+  background-attachment: fixed;
+  color: var(--text-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: var(--text-heading);
+  letter-spacing: -0.02em;
+}
+
+button,
+input,
+select {
+  font-family: var(--font-body);
+}
+
+button {
+  cursor: pointer;
+}

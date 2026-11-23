@@ -1,0 +1,225 @@
+.sidebar-stack {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 960px) {
+  .sidebar-stack {
+    position: static;
+  }
+}
+
+.sidebar-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.step-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background-color: var(--bg-subtle);
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.step-badge {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  background-color: var(--bg-subtle);
+  color: var(--color-primary);
+}
+
+.sidebar-title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-heading);
+}
+
+.sidebar-desc {
+  margin-top: 8px;
+  font-size: 0.81rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.skill-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.skill-input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  font-size: 0.85rem;
+  color: var(--text-heading);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.skill-input::placeholder {
+  color: var(--text-muted);
+}
+
+.skill-input:focus {
+  background-color: #ffffff;
+  border-color: var(--color-primary);
+  box-shadow: var(--ring-focus);
+}
+
+.skill-add-btn {
+  flex-shrink: 0;
+  padding: 9px 14px;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s var(--ease-smooth),
+    transform 0.15s var(--ease-smooth);
+}
+
+.skill-add-btn:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.skill-error {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background-color: var(--red-bg);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--red-text);
+}
+
+.skill-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px 5px 12px;
+  font-size: 0.79rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  background-color: var(--bg-subtle);
+  border: 1px solid rgba(21, 61, 50, 0.1);
+  border-radius: var(--radius-pill);
+  transition: background-color 0.15s ease;
+}
+
+.skill-chip:hover {
+  background-color: #e3ecd6;
+}
+
+.skill-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+}
+
+.skill-remove-btn:hover {
+  background-color: rgba(21, 61, 50, 0.12);
+  color: var(--text-heading);
+}
+
+/* Pilihan Sumber Data dengan Penjelasan */
+.source-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.source-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.source-label:hover {
+  background-color: var(--bg-subtle);
+}
+
+.source-label:has(.source-radio:checked) {
+  background-color: rgba(197, 243, 106, 0.24);
+  border-color: var(--color-primary);
+}
+
+.source-radio {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.source-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.source-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.source-caption {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
