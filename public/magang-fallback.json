@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1001,
+    "title": "Frontend Engineering Intern (React & TypeScript)",
+    "company_name": "Nusantara Cloud Tech",
+    "category": "Software Development",
+    "candidate_required_location": "Surabaya (Hybrid)",
+    "salary": "Rp 4.500.000",
+    "tags": ["React", "TypeScript", "CSS", "Git", "REST API"]
+  },
+  {
+    "id": 1002,
+    "title": "Full-Stack Web Developer Intern",
+    "company_name": "Garuda FinTech",
+    "category": "Software Development",
+    "candidate_required_location": "Jakarta (Remote)",
+    "salary": "Rp 5.500.000",
+    "tags": ["React", "TypeScript", "PostgreSQL", "Express", "Prisma"]
+  },
+  {
+    "id": 1003,
+    "title": "Software Engineer Intern — Web Platform",
+    "company_name": "Bintang Commerce",
+    "category": "Software Development",
+    "candidate_required_location": "Indonesia (Remote)",
+    "salary": "Rp 6.000.000",
+    "tags": ["React", "TypeScript", "CSS", "Git", "Testing"]
+  },
+  {
+    "id": 1004,
+    "title": "DevOps & Cloud Infrastructure Intern",
+    "company_name": "AwanMerdeka Cloud",
+    "category": "DevOps / Sysadmin",
+    "candidate_required_location": "Jakarta (Remote)",
+    "salary": "Rp 5.200.000",
+    "tags": ["Git", "PostgreSQL", "Linux", "Docker", "CI/CD"]
+  },
+  {
+    "id": 1005,
+    "title": "Backend Engineer Intern (Node.js)",
+    "company_name": "EduSpark Indonesia",
+    "category": "Software Development",
+    "candidate_required_location": "Bandung (Hybrid)",
+    "salary": "Rp 4.000.000",
+    "tags": ["Node.js", "TypeScript", "REST API", "PostgreSQL", "Docker"]
+  },
+  {
+    "id": 1006,
+    "title": "UI/UX & Frontend Developer Intern",
+    "company_name": "Karya Digital Studio",
+    "category": "Design & Frontend",
+    "candidate_required_location": "Yogyakarta (Onsite)",
+    "salary": "Rp 3.500.000",
+    "tags": ["React", "CSS", "Figma", "JavaScript"]
+  },
+  {
+    "id": 1007,
+    "title": "Mobile App Developer Intern (React Native)",
+    "company_name": "GoLogistik Nusantara",
+    "category": "Mobile Development",
+    "candidate_required_location": "Jakarta (Hybrid)",
+    "salary": "Rp 5.000.000",
+    "tags": ["React", "TypeScript", "REST API", "Git"]
+  },
+  {
+    "id": 1008,
+    "title": "Cybersecurity & Network Analyst Intern",
+    "company_name": "SiberGuard Indonesia",
+    "category": "Cybersecurity",
+    "candidate_required_location": "Surabaya (Onsite)",
+    "salary": "Rp 4.800.000",
+    "tags": ["Linux", "Networking", "Python", "Security"]
+  },
+  {
+    "id": 1009,
+    "title": "Data Engineering Intern",
+    "company_name": "Analitika Data Mandiri",
+    "category": "Data",
+    "candidate_required_location": "Jakarta (Remote)",
+    "salary": "Rp 5.300.000",
+    "tags": ["Python", "PostgreSQL", "SQL", "Docker"]
+  },
+  {
+    "id": 1010,
+    "title": "Junior Web Developer Intern",
+    "company_name": "Mitra UMKM Tech",
+    "category": "Software Development",
+    "candidate_required_location": "Malang (Hybrid)",
+    "salary": "Rp 3.200.000",
+    "tags": ["HTML", "CSS", "JavaScript", "Git"]
+  },
+  {
+    "id": 1011,
+    "title": "QA Automation Engineer Intern",
+    "company_name": "Amanah Pay",
+    "category": "QA / Testing",
+    "candidate_required_location": "Jakarta (Remote)",
+    "salary": "Rp 4.200.000",
+    "tags": ["TypeScript", "Testing", "Playwright", "Git"]
+  },
+  {
+    "id": 1012,
+    "title": "AI & Machine Learning Intern",
+    "company_name": "CerdasAI Lab",
+    "category": "AI / ML",
+    "candidate_required_location": "Bandung (Remote)",
+    "salary": "Rp 5.800.000",
+    "tags": ["Python", "PyTorch", "REST API", "Docker"]
+  },
+  {
+    "id": 1013,
+    "title": "Frontend React Developer Intern",
+    "company_name": "SehatKita Digital",
+    "category": "Software Development",
+    "candidate_required_location": "Surabaya (Remote)",
+    "salary": "Rp 4.700.000",
+    "tags": ["React", "TypeScript", "CSS", "REST API"]
+  },
+  {
+    "id": 1014,
+    "title": "Cloud & IoT Platform Intern",
+    "company_name": "SmartAgro Indonesia",
+    "category": "IoT & Embedded",
+    "candidate_required_location": "Surabaya (Hybrid)",
+    "salary": "Rp 4.300.000",
+    "tags": ["TypeScript", "MQTT", "Node.js", "REST API"]
+  },
+  {
+    "id": 1015,
+    "title": "Software Engineering Intern — Core API",
+    "company_name": "Bank Digital Khatulistiwa",
+    "category": "Software Development",
+    "candidate_required_location": "Jakarta (Onsite)",
+    "salary": "Rp 6.500.000",
+    "tags": ["Go", "PostgreSQL", "Docker", "REST API", "Git"]
+  }
+]
