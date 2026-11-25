@@ -5,6 +5,15 @@ import { useLocalStorage } from "./hooks/uselocalstorage";
 import { inferWorkMode, isDuplicateApplication } from "./utils/skillmatch";
 import { SkillProfileSidebar } from "./components/skillprofilesidebar";
 import { JobExplorer } from "./components/jobexplorer";
+
+// Application Management
+import { ApplicationForm } from "./components/applicationform";
+import { WarRoom } from "./components/warroom";
+import { InterviewConflictBanner } from "./components/interviewconflictbanner";
+import { UndoToast } from "./components/undotoast";
+import { useUndoDelete } from "./hooks/useundodelete";
+import { simulateGhosting } from "./utils/applicationutils";
+
 import "./App.css";
 
 type ActiveTab = "explore" | "pipeline" | "comparator";
@@ -20,8 +29,18 @@ export function App() {
     "kapten_applications",
     []
   );
-  const [jobSource, setJobSource] = useState<JobSource>("remotive");
-  const [activeTab, setActiveTab] = useState<ActiveTab>("explore");
+const [jobSource, setJobSource] = useState<JobSource>("remotive");
+const [activeTab, setActiveTab] = useState<ActiveTab>("explore");
+
+// State Form Manual & Undo Delete
+const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const {
+    deleted,
+    deleteApplication,
+    undoDelete,
+    dismissUndo,
+  } = useUndoDelete(applications, setApplications);
 
   const offerCount = useMemo(
     () => applications.filter((app) => app.status === "OFFER").length,
@@ -75,6 +94,35 @@ export function App() {
     setApplications((prev) => [newApplication, ...prev]);
   };
 
+    // Handler Form Tambah Lamaran Manual
+    const handleAddApplication = (application: Application) => {
+      setApplications((prev) => {
+        if (
+          isDuplicateApplication(
+            prev,
+            application.company,
+            application.role
+          )
+        ) {
+          return prev;
+        }
+
+        return [application, ...prev];
+      });
+
+      setActiveTab("pipeline");
+    };
+
+    // Handler Simulasi +15 Hari
+    const handleSimulateGhosting = (id: string) => {
+      setApplications((prev) =>
+        prev.map((application) =>
+          application.id === id
+            ? simulateGhosting(application)
+            : application
+        )
+      );
+    };
   return (
     <div className="app-wrapper">
       {/* Navigasi Utama Tetap (3 Tahap Perjalanan Magang) */}
@@ -121,7 +169,7 @@ export function App() {
           {/* Tombol Aksi Cepat (Nanti dihubungkan ke Modal Form Anggota 2) */}
           <button
             type="button"
-            onClick={() => setActiveTab("pipeline")}
+            onClick={() => setIsFormOpen(true)}
             className="btn-manual-add"
             title="Tambah lamaran secara manual"
           >
@@ -130,6 +178,8 @@ export function App() {
           </button>
         </div>
       </header>
+      {/* Banner Bentrok Jadwal Interview */}
+      <InterviewConflictBanner applications={applications} />
 
       {/* Tab 1: Fitur Anggota 1 (Profil Skill & Eksplorasi Lowongan) */}
       {activeTab === "explore" && (
@@ -178,22 +228,13 @@ export function App() {
 
       {/* Slot Integrasi Anggota 2: War Room Pipeline */}
       {activeTab === "pipeline" && (
-        <section className="module-placeholder">
-          <div className="placeholder-card">
-            <h2>War Room Pipeline Lamaran ({applications.length} Tersimpan)</h2>
-            <p>
-              Area ini disiapkan untuk komponen War Room Pipeline, Form Tambah
-              Manual, Simulasi +15 Hari, dan Detail Lamaran milik Anggota 2 & 3.
-            </p>
-            <button
-              type="button"
-              onClick={() => setActiveTab("explore")}
-              className="btn-primary"
-            >
-              Kembali ke Eksplorasi Lowongan
-            </button>
-          </div>
-        </section>
+        <WarRoom
+          applications={applications}
+          kaptenSkills={kaptenSkills}
+          onAdd={() => setIsFormOpen(true)}
+          onDelete={deleteApplication}
+          onSimulateGhosting={handleSimulateGhosting}
+        />
       )}
 
       {/* Slot Integrasi Anggota 3: Offer Comparator */}
@@ -214,6 +255,24 @@ export function App() {
             </button>
           </div>
         </section>
+      )}
+
+      {/* Form Tambah Lamaran Manual */}
+      {isFormOpen && (
+        <ApplicationForm
+          applications={applications}
+          onAdd={handleAddApplication}
+          onClose={() => setIsFormOpen(false)}
+        />
+      )}
+
+      {/* Undo Delete Toast */}
+      {deleted && (
+        <UndoToast
+          application={deleted.application}
+          onUndo={undoDelete}
+          onDismiss={dismissUndo}
+        />
       )}
     </div>
   );
