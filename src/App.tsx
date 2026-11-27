@@ -1,6 +1,11 @@
 import { useState, useMemo } from "react";
 import { Compass, Briefcase, Scale, Plus } from "lucide-react";
-import type { Application, JobListing, JobSource } from "./types";
+import type {
+  Application,
+  ApplicationStatus,
+  JobListing,
+  JobSource,
+} from "./types";
 import { useLocalStorage } from "./hooks/uselocalstorage";
 import { inferWorkMode, isDuplicateApplication } from "./utils/skillmatch";
 import { SkillProfileSidebar } from "./components/skillprofilesidebar";
@@ -13,6 +18,19 @@ import { InterviewConflictBanner } from "./components/interviewconflictbanner";
 import { UndoToast } from "./components/undotoast";
 import { useUndoDelete } from "./hooks/useundodelete";
 import { simulateGhosting } from "./utils/applicationutils";
+
+// Detail, State Machine, Interview Prep, Dashboard Stats & Offer Comparator
+import { DashboardStats } from "./components/dashboardstats";
+import { ApplicationDetail } from "./components/applicationdetail";
+import { OfferComparator } from "./components/offercomparator";
+import {
+  applyStatusTransition,
+  addChecklistItem,
+  toggleChecklistItem,
+  removeChecklistItem,
+  addActivityNote,
+  type TransitionPayload,
+} from "./utils/statemachine";
 
 import "./App.css";
 
@@ -29,22 +47,31 @@ export function App() {
     "kapten_applications",
     []
   );
-const [jobSource, setJobSource] = useState<JobSource>("remotive");
-const [activeTab, setActiveTab] = useState<ActiveTab>("explore");
+  const [jobSource, setJobSource] = useState<JobSource>("remotive");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("explore");
 
-// State Form Manual & Undo Delete
-const [isFormOpen, setIsFormOpen] = useState(false);
+  // State Form Manual, Detail Lamaran & Undo Delete
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedApplicationId, setSelectedApplicationId] = useState<
+    string | null
+  >(null);
 
-  const {
-    deleted,
-    deleteApplication,
-    undoDelete,
-    dismissUndo,
-  } = useUndoDelete(applications, setApplications);
+  const { deleted, deleteApplication, undoDelete, dismissUndo } = useUndoDelete(
+    applications,
+    setApplications
+  );
 
   const offerCount = useMemo(
     () => applications.filter((app) => app.status === "OFFER").length,
     [applications]
+  );
+
+  const selectedApplication = useMemo(
+    () =>
+      selectedApplicationId
+        ? (applications.find((app) => app.id === selectedApplicationId) ?? null)
+        : null,
+    [applications, selectedApplicationId]
   );
 
   const handleAddSkill = (newSkill: string) => {
@@ -94,35 +121,89 @@ const [isFormOpen, setIsFormOpen] = useState(false);
     setApplications((prev) => [newApplication, ...prev]);
   };
 
-    // Handler Form Tambah Lamaran Manual
-    const handleAddApplication = (application: Application) => {
-      setApplications((prev) => {
-        if (
-          isDuplicateApplication(
-            prev,
-            application.company,
-            application.role
-          )
-        ) {
-          return prev;
-        }
+  // Handler Form Tambah Lamaran Manual
+  const handleAddApplication = (application: Application) => {
+    setApplications((prev) => {
+      if (isDuplicateApplication(prev, application.company, application.role)) {
+        return prev;
+      }
 
-        return [application, ...prev];
-      });
+      return [application, ...prev];
+    });
 
-      setActiveTab("pipeline");
-    };
+    setActiveTab("pipeline");
+  };
 
-    // Handler Simulasi +15 Hari
-    const handleSimulateGhosting = (id: string) => {
-      setApplications((prev) =>
-        prev.map((application) =>
-          application.id === id
-            ? simulateGhosting(application)
-            : application
-        )
-      );
-    };
+  // Handler Simulasi +15 Hari
+  const handleSimulateGhosting = (id: string) => {
+    setApplications((prev) =>
+      prev.map((application) =>
+        application.id === id ? simulateGhosting(application) : application
+      )
+    );
+  };
+
+  // Handler Hapus Lamaran (tutup modal jika sedang dibuka)
+  const handleDeleteApplication = (id: string) => {
+    if (selectedApplicationId === id) {
+      setSelectedApplicationId(null);
+    }
+    deleteApplication(id);
+  };
+
+  // Handler Transisi Status (State Machine)
+  const handleTransitionStatus = (
+    id: string,
+    targetStatus: ApplicationStatus,
+    payload: TransitionPayload
+  ) => {
+    setApplications((prev) =>
+      prev.map((application) =>
+        application.id === id
+          ? applyStatusTransition(application, targetStatus, payload)
+          : application
+      )
+    );
+  };
+
+  // Handler Nested Checklist (Immutable)
+  const handleAddChecklistItem = (id: string, text: string) => {
+    setApplications((prev) =>
+      prev.map((application) =>
+        application.id === id ? addChecklistItem(application, text) : application
+      )
+    );
+  };
+
+  const handleToggleChecklistItem = (id: string, itemId: string) => {
+    setApplications((prev) =>
+      prev.map((application) =>
+        application.id === id
+          ? toggleChecklistItem(application, itemId)
+          : application
+      )
+    );
+  };
+
+  const handleRemoveChecklistItem = (id: string, itemId: string) => {
+    setApplications((prev) =>
+      prev.map((application) =>
+        application.id === id
+          ? removeChecklistItem(application, itemId)
+          : application
+      )
+    );
+  };
+
+  // Handler Catatan Aktivitas Manual
+  const handleAddActivityNote = (id: string, note: string) => {
+    setApplications((prev) =>
+      prev.map((application) =>
+        application.id === id ? addActivityNote(application, note) : application
+      )
+    );
+  };
+
   return (
     <div className="app-wrapper">
       {/* Navigasi Utama Tetap (3 Tahap Perjalanan Magang) */}
@@ -166,7 +247,6 @@ const [isFormOpen, setIsFormOpen] = useState(false);
             </button>
           </nav>
 
-          {/* Tombol Aksi Cepat (Nanti dihubungkan ke Modal Form Anggota 2) */}
           <button
             type="button"
             onClick={() => setIsFormOpen(true)}
@@ -178,19 +258,23 @@ const [isFormOpen, setIsFormOpen] = useState(false);
           </button>
         </div>
       </header>
-      {/* Banner Bentrok Jadwal Interview */}
+
+      {/* Banner Bentrok Jadwal Interview (Dicek dari seluruh data) */}
       <InterviewConflictBanner applications={applications} />
 
-      {/* Tab 1: Fitur Anggota 1 (Profil Skill & Eksplorasi Lowongan) */}
+      {/* 5 Kartu Statistik Dashboard (Derived State) */}
+      <DashboardStats applications={applications} />
+
+      {/* Tab 1: Profil Skill & Eksplorasi Lowongan */}
       {activeTab === "explore" && (
         <>
           <section className="page-header">
             <div>
-              <p className="page-eyebrow">Tahap 1 • Pencarian & Pencocokan</p>
+              <p className="page-eyebrow">Tahap 1 • Pencarian &amp; Pencocokan</p>
               <h2 className="page-title">Eksplorasi Lowongan Magang</h2>
               <p className="page-subtitle">
-                Atur skill kamu di panel kiri, lalu simpan lowongan dengan kecocokan
-                terbaik ke Wishlist.
+                Atur skill kamu di panel kiri, lalu simpan lowongan dengan
+                kecocokan terbaik ke Wishlist.
               </p>
             </div>
 
@@ -200,7 +284,7 @@ const [isFormOpen, setIsFormOpen] = useState(false);
                 <strong>{kaptenSkills.length}</strong>
               </div>
               <div className="metric-pill">
-                <span>Tersimpan di Wishlist:</span>
+                <span>Tersimpan di Pipeline:</span>
                 <strong>{applications.length}</strong>
               </div>
             </div>
@@ -226,38 +310,28 @@ const [isFormOpen, setIsFormOpen] = useState(false);
         </>
       )}
 
-      {/* Slot Integrasi Anggota 2: War Room Pipeline */}
+      {/* Tab 2: War Room Pipeline */}
       {activeTab === "pipeline" && (
         <WarRoom
           applications={applications}
           kaptenSkills={kaptenSkills}
           onAdd={() => setIsFormOpen(true)}
-          onDelete={deleteApplication}
+          onDelete={handleDeleteApplication}
           onSimulateGhosting={handleSimulateGhosting}
+          onSelect={(application) => setSelectedApplicationId(application.id)}
         />
       )}
 
-      {/* Slot Integrasi Anggota 3: Offer Comparator */}
+      {/* Tab 3: Offer Comparator */}
       {activeTab === "comparator" && (
-        <section className="module-placeholder">
-          <div className="placeholder-card">
-            <h2>Bandingkan Offer Magang ({offerCount} Offer)</h2>
-            <p>
-              Area ini disiapkan untuk komponen Offer Comparator milik Anggota 3
-              untuk membandingkan dua tawaran magang secara objektif.
-            </p>
-            <button
-              type="button"
-              onClick={() => setActiveTab("explore")}
-              className="btn-primary"
-            >
-              Kembali ke Eksplorasi Lowongan
-            </button>
-          </div>
-        </section>
+        <OfferComparator
+          applications={applications}
+          kaptenSkills={kaptenSkills}
+          onGoToPipeline={() => setActiveTab("pipeline")}
+        />
       )}
 
-      {/* Form Tambah Lamaran Manual */}
+      {/* Modal Form Tambah Lamaran Manual */}
       {isFormOpen && (
         <ApplicationForm
           applications={applications}
@@ -266,7 +340,23 @@ const [isFormOpen, setIsFormOpen] = useState(false);
         />
       )}
 
-      {/* Undo Delete Toast */}
+      {/* Modal Detail Lamaran: State Machine, Checklist, Prep Timer & Activity Log */}
+      {selectedApplication && (
+        <ApplicationDetail
+          application={selectedApplication}
+          kaptenSkills={kaptenSkills}
+          onClose={() => setSelectedApplicationId(null)}
+          onTransitionStatus={handleTransitionStatus}
+          onAddChecklistItem={handleAddChecklistItem}
+          onToggleChecklistItem={handleToggleChecklistItem}
+          onRemoveChecklistItem={handleRemoveChecklistItem}
+          onAddActivityNote={handleAddActivityNote}
+          onSimulateGhosting={handleSimulateGhosting}
+          onDelete={handleDeleteApplication}
+        />
+      )}
+
+      {/* Undo Delete Toast (5 detik) */}
       {deleted && (
         <UndoToast
           application={deleted.application}
