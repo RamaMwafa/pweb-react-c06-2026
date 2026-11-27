@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
   Search,
   X,
@@ -17,7 +17,7 @@ import {
   calculateSkillMatch,
   isDuplicateApplication,
 } from "../utils/skillmatch";
-import "./JobExplorer.css";
+import "./jobexplorer.css";
 
 interface JobExplorerProps {
   kaptenSkills: string[];
@@ -57,7 +57,21 @@ export function JobExplorer({
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
   const [sortBy, setSortBy] = useState<SortOption>("match-desc");
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const debouncedSearch = useDebounce(searchTerm, 400);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "/") return;
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      event.preventDefault();
+      searchInputRef.current?.focus();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -137,11 +151,12 @@ export function JobExplorer({
           <div className="search-box">
             <Search size={16} className="search-icon" />
             <input
+              ref={searchInputRef}
               id="job-search-input"
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Ketik posisi, perusahaan, atau skill..."
+              placeholder="Ketik posisi, perusahaan, atau skill... (tekan /)"
               className="search-input"
             />
             {searchTerm && (

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Award, Database, X } from "lucide-react";
 import type { JobSource } from "../types";
-import "./SkillProfileSidebar.css";
+import "./skillprofilesidebar.css";
 
 interface SkillProfileSidebarProps {
   skills: string[];
